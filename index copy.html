@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Guardian - Marine Hazard Reporting Platform</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+    
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-water"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-main">Ocean Guardian</span>
+                    <span class="logo-sub">Marine Protection System</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn secondary" onclick="showReportModal()">
+                    <i class="fas fa-plus"></i> 
+                    <span>Report Hazard</span>
+                </button>
+                <button class="nav-btn primary" onclick="showDashboard()">
+                    <i class="fas fa-chart-bar"></i> 
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-btn tertiary" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <div class="nav-profile" onclick="showProfileMenu()">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="Profile" class="profile-img">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Protecting Our Oceans Together</h1>
+            <p class="hero-subtitle">Real-time marine hazard reporting and social media analytics for ocean conservation</p>
+            <div class="hero-actions">
+                <button class="btn btn-hero-primary" onclick="showReportModal()">
+                    <i class="fas fa-shield-alt"></i> Report Hazard
+                </button>
+                <button class="btn btn-hero-secondary" onclick="document.getElementById('dashboard').scrollIntoView({behavior: 'smooth'})">
+                    <i class="fas fa-chart-line"></i> View Analytics
+                </button>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="floating-cards">
+                <div class="floating-card card-1">
+                    <i class="fas fa-oil-can"></i>
+                    <span>Oil Spill Detection</span>
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-recycle"></i>
+                    <span>Plastic Monitoring</span>
+                </div>
+                <div class="floating-card card-3">
+                    <i class="fas fa-fish"></i>
+                    <span>Marine Life Protection</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container" id="dashboard">
+        <div class="stats-section">
+            <h2 class="section-title">
+                <i class="fas fa-analytics"></i>
+                Real-time Ocean Health Metrics
+            </h2>
+            <div class="stats-grid">
+                <div class="stat-card stat-primary">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="totalReports">247</div>
+                        <div class="stat-label">Total Reports</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i> +12% this week
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-danger">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="activeHazards">23</div>
+                        <div class="stat-label">Active Hazards</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-down"></i> -5% from yesterday
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-success">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="verifiedReports">189</div>
+                        <div class="stat-label">Verified Reports</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i> +8% accuracy
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-info">
+                    <div class="stat-icon">
+                        <i class="fas fa-hashtag"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="socialMentions">1,342</div>
+                        <div class="stat-label">Social Mentions</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i> +25% engagement
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-warning">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="activeUsers">1,847</div>
+                        <div class="stat-label">Active Contributors</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i> +18% new users
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card stat-purple">
+                    <div class="stat-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="coverage">94%</div>
+                        <div class="stat-label">Coastal Coverage</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i> Expanding reach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card map-card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-map-marked-alt"></i>
+                        Live Hazard Map
+                    </h2>
+                    <div class="map-controls">
+                        <button class="map-btn" onclick="toggleHeatmap()" title="Toggle Heatmap">
+                            <i class="fas fa-thermometer-half"></i>
+                        </button>
+                        <button class="map-btn" onclick="toggleSatellite()" title="Satellite View">
+                            <i class="fas fa-satellite"></i>
+                        </button>
+                        <button class="map-btn" onclick="centerMap()" title="Center Map">
+                            <i class="fas fa-crosshairs"></i>
+                        </button>
+                        <button class="map-btn" onclick="toggleFullscreen()" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <div id="map"></div>
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <div class="legend-color critical"></div>
+                            <span>Critical</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color high"></div>
+                            <span>High</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color medium"></div>
+                            <span>Medium</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color low"></div>
+                            <span>Low</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card reports-card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Recent Reports
+                    </h2>
+                    <div class="card-actions">
+                        <select class="filter-select" id="reportFilter" onchange="filterReports()">
+                            <option value="all">All Reports</option>
+                            <option value="verified">Verified Only</option>
+                            <option value="pending">Pending</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                        <button class="card-btn" onclick="refreshReports()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="reports-list" id="reportsList">
+                    </div>
+            </div>
+
+            <div class="card social-card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-hashtag"></i>
+                        Social Media Intelligence
+                    </h2>
+                    <div class="social-metrics">
+                        <div class="metric positive">
+                            <span class="metric-value" id="positiveCount">45%</span>
+                            <span class="metric-label">Positive</span>
+                        </div>
+                        <div class="metric neutral">
+                            <span class="metric-value" id="neutralCount">35%</span>
+                            <span class="metric-label">Neutral</span>
+                        </div>
+                        <div class="metric negative">
+                            <span class="metric-value" id="negativeCount">20%</span>
+                            <span class="metric-label">Negative</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="social-feed" id="socialFeed">
+                    </div>
+            </div>
+
+            <div class="card analytics-card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-chart-line"></i>
+                        Predictive Analytics
+                    </h2>
+                    <div class="chart-controls">
+                        <select class="chart-select" id="timeRange" onchange="updateChart()">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="90">Last 3 Months</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div class="chart-insights">
+                    <div class="insight">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Peak reporting hours: 6-9 AM</span>
+                    </div>
+                    <div class="insight">
+                        <i class="fas fa-trending-up"></i>
+                        <span>Oil spill reports increased 15% this week</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card ai-card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-robot"></i>
+                        AI-Powered Insights
+                    </h2>
+                    <div class="ai-status">
+                        <div class="status-indicator active"></div>
+                        <span>AI Engine Active</span>
+                    </div>
+                </div>
+                <div class="ai-content">
+                    <div class="ai-alert high-priority">
+                        <div class="alert-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h4>High Risk Zone Detected</h4>
+                            <p>Unusual cluster of reports near Chennai Port. Recommend immediate investigation.</p>
+                            <span class="alert-confidence">Confidence: 94%</span>
+                        </div>
+                    </div>
+                    <div class="ai-prediction">
+                        <h4>24-Hour Forecast</h4>
+                        <div class="prediction-item">
+                            <span class="prediction-type">Oil Spill Risk</span>
+                            <div class="risk-meter">
+                                <div class="risk-fill" style="width: 65%"></div>
+                            </div>
+                            <span class="risk-value">65%</span>
+                        </div>
+                        <div class="prediction-item">
+                            <span class="prediction-type">Plastic Debris</span>
+                            <div class="risk-meter">
+                                <div class="risk-fill" style="width: 40%"></div>
+                            </div>
+                            <span class="risk-value">40%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card weather-card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-cloud-sun"></i>
+                        Marine Weather
+                    </h2>
+                </div>
+                <div class="weather-content">
+                    <div class="current-weather">
+                        <div class="weather-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <div class="weather-details">
+                            <div class="temperature">28Â°C</div>
+                            <div class="conditions">Partly Cloudy</div>
+                            <div class="location">Bay of Bengal</div>
+                        </div>
+                    </div>
+                    <div class="weather-metrics">
+                        <div class="weather-item">
+                            <i class="fas fa-wind"></i>
+                            <span>12 km/h NE</span>
+                        </div>
+                        <div class="weather-item">
+                            <i class="fas fa-water"></i>
+                            <span>Wave: 1.2m</span>
+                        </div>
+                        <div class="weather-item">
+                            <i class="fas fa-eye"></i>
+                            <span>Visibility: 15km</span>
+                        </div>
+                    </div>
+                    <div class="weather-alerts">
+                        <div class="weather-alert warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>High tide warning at 3:30 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportModal" class="modal">
+        <div class="modal-content enhanced-modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-shield-alt"></i> Report Ocean Hazard</h2>
+                <span class="close" onclick="closeReportModal()">&times;</span>
+            </div>
+            <form id="hazardForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="hazardType">Hazard Type</label>
+                        <select id="hazardType" class="form-control" required>
+                            <option value="">Select hazard type</option>
+                            <option value="oil-spill">🛢️ Oil Spill</option>
+                            <option value="plastic-waste">♻️ Plastic Waste</option>
+                            <option value="chemical-pollution">⚗️ Chemical Pollution</option>
+                            <option value="marine-life">🐟 Unusual Marine Life</option>
+                            <option value="algae-bloom">🌊 Algae Bloom</option>
+                            <option value="debris">🗑️ Marine Debris</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="severity">Severity Level</label>
+                        <select id="severity" class="form-control" required>
+                            <option value="">Select severity</option>
+                            <option value="low">🟢 Low Impact</option>
+                            <option value="medium">🟡 Medium Impact</option>
+                            <option value="high">🟠 High Impact</option>
+                            <option value="critical">🔴 Critical</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <div class="location-input">
+                        <input type="text" id="location" class="form-control" placeholder="e.g., Bay of Bengal, near Chennai" required>
+                        <button type="button" class="location-btn" onclick="getCurrentLocation()">
+                            <i class="fas fa-location-arrow"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Detailed Description</label>
+                    <textarea id="description" class="form-control" rows="4" placeholder="Provide detailed information about the hazard..." required></textarea>
+                    <div class="char-counter">
+                        <span id="charCount">0</span>/500 characters
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="photo">Upload Evidence</label>
+                    <div class="file-upload-area" id="fileUpload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drop files here or <span class="upload-link">browse</span></p>
+                        <input type="file" id="photo" class="form-control" accept="image/*" multiple>
+                    </div>
+                    <div class="upload-preview" id="uploadPreview"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact">Contact Information (Optional)</label>
+                    <input type="email" id="contact" class="form-control" placeholder="your@email.com for follow-up">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeReportModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> 
+                        Submit Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="profileMenu" class="profile-menu">
+        <div class="profile-info">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" alt="Profile">
+            <div>
+                <div class="profile-name">Ocean Guardian</div>
+                <div class="profile-role">Marine Conservationist</div>
+            </div>
+        </div>
+        <div class="menu-divider"></div>
+        <a href="#" class="menu-item">
+            <i class="fas fa-user"></i> Profile Settings
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-bell"></i> Notifications
+        </a>
+        <a href="#" class="menu-item">
+            <i class="fas fa-chart-bar"></i> My Reports
+        </a>
+        <div class="menu-divider"></div>
+        <a href="#" class="menu-item">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading Ocean Data...</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <script src="script.js"></script>
+</body>
+</html>
