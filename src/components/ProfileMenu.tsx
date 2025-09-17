@@ -16,7 +16,13 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ onClose, user, onLogout }) =>
   return (
     <div className="profile-menu" style={{ display: 'block' }}>
       <div className="profile-info">
-        <img src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face"} alt="Profile" />
+        <img
+          src={
+            user?.avatar ||
+            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face'
+          }
+          alt="Profile"
+        />
         <div>
           <div className="profile-name">{user?.name || 'Ocean Guardian'}</div>
           <div className="profile-role">{user?.role || 'Marine Conservationist'}</div>
