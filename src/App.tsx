@@ -22,34 +22,39 @@ function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [newReport, setNewReport] = useState<Report | null>(null);
-  
+
   const { isDarkMode, toggleDarkMode } = useTheme();
   const { notifications, showNotification, removeNotification } = useNotifications();
   const { reports, socialPosts, stats, updateStats, addReport } = useAppData(showNotification);
   const { user, isAuthenticated, isLoading: authLoading, login, signup, logout } = useAuth();
 
   useEffect(() => {
-    // Initialize the app with loading sequence
     if (!authLoading) {
       const initTimer = setTimeout(() => {
         setIsLoading(false);
         if (isAuthenticated && user) {
-          showNotification(`Welcome back, ${user.name}!`, 'Ready to protect our oceans together.', 'success');
+          showNotification(
+            `Welcome back, ${user.name}!`,
+            'Ready to protect our oceans together.',
+            'success'
+          );
         } else {
-          showNotification('Welcome to Ocean Guardian!', 'Sign in to report hazards and track ocean health.', 'info');
+          showNotification(
+            'Welcome to Ocean Guardian!',
+            'Sign in to report hazards and track ocean health.',
+            'info'
+          );
         }
       }, 2000);
-      
+
       return () => clearTimeout(initTimer);
     }
   }, [authLoading, isAuthenticated, user, showNotification]);
 
   useEffect(() => {
-    // Auto-refresh data every 30 seconds
     const refreshTimer = setInterval(() => {
       updateStats();
     }, 30000);
-
     return () => clearInterval(refreshTimer);
   }, [updateStats]);
 
@@ -69,8 +74,7 @@ function App() {
   const handleReportSubmit = (reportData: Omit<Report, 'id' | 'timestamp'>) => {
     const report = addReport(reportData);
     setNewReport(report);
-    
-    // Clear new report highlight after 10 seconds
+
     setTimeout(() => {
       setNewReport(null);
     }, 10000);
@@ -85,7 +89,6 @@ function App() {
     showNotification('Signed Out', 'You have been successfully signed out.', 'info');
   };
 
-  // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (showProfileMenu && !(event.target as Element)?.closest('.nav-profile, .profile-menu')) {
@@ -103,7 +106,6 @@ function App() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [showProfileMenu, showReportModal, showAuthModal]);
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -128,8 +130,8 @@ function App() {
   return (
     <div className={`app ${isDarkMode ? 'dark-theme' : ''}`}>
       <AnimatedBackground />
-      
-      <Navigation 
+
+      <Navigation
         onShowReportModal={handleShowReportModal}
         onShowDashboard={handleShowDashboard}
         onToggleDarkMode={toggleDarkMode}
@@ -144,8 +146,8 @@ function App() {
 
       <main className="main-container" id="dashboard">
         <StatsSection stats={stats} />
-        <DashboardGrid 
-          reports={reports} 
+        <DashboardGrid
+          reports={reports}
           socialPosts={socialPosts}
           onShowReportModal={handleShowReportModal}
           showNotification={showNotification}
@@ -154,7 +156,7 @@ function App() {
       </main>
 
       {showReportModal && (
-        <ReportModal 
+        <ReportModal
           onClose={() => setShowReportModal(false)}
           showNotification={showNotification}
           onReportSubmit={handleReportSubmit}
@@ -173,13 +175,14 @@ function App() {
       )}
 
       {showProfileMenu && isAuthenticated && (
-        <ProfileMenu onClose={handleCloseProfileMenu} />
+        <ProfileMenu
+          onClose={handleCloseProfileMenu}
           user={user}
           onLogout={handleLogout}
         />
       )}
 
-      <NotificationContainer 
+      <NotificationContainer
         notifications={notifications}
         onRemove={removeNotification}
       />
