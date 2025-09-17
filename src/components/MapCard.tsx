@@ -10,9 +10,10 @@ declare global {
 interface MapCardProps {
   reports: Report[];
   showNotification: (title: string, message: string, type: string) => void;
+  newReport?: Report | null;
 }
 
-const MapCard: React.FC<MapCardProps> = ({ reports, showNotification }) => {
+const MapCard: React.FC<MapCardProps> = ({ reports, showNotification, newReport }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
@@ -98,6 +99,68 @@ const MapCard: React.FC<MapCardProps> = ({ reports, showNotification }) => {
       });
     }
   }, [reports]);
+
+  // Handle new report animation
+  useEffect(() => {
+    if (newReport && mapInstance.current) {
+      const color = getSeverityColor(newReport.severity);
+      const radius = getSeverityRadius(newReport.severity);
+
+      // Create animated marker for new report
+      const marker = window.L.circleMarker([newReport.coordinates[0], newReport.coordinates[1]], {
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.9,
+        radius: radius * 1.5,
+        weight: 4,
+        className: 'pulsing-marker'
+      }).addTo(mapInstance.current);
+
+      const popupContent = `
+        <div class="popup-content">
+          <div class="popup-header">
+            <h4>${formatHazardType(newReport.type)} <span style="color: #10b981; font-size: 0.8em;">NEW!</span></h4>
+            <span class="severity-badge severity-${newReport.severity}">${newReport.severity.toUpperCase()}</span>
+          </div>
+          <div class="popup-body">
+            <div class="popup-info">
+              <i class="fas fa-clock"></i>
+              <span>Just reported</span>
+            </div>
+            <div class="popup-info">
+              <i class="fas fa-user"></i>
+              <span>${newReport.reporter}</span>
+            </div>
+            <div class="popup-info">
+              <i class="fas fa-clock" style="color: #f59e0b;"></i>
+              <span>Pending Verification</span>
+            </div>
+            <p class="popup-description">${newReport.description}</p>
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent, {
+        maxWidth: 300,
+        className: 'custom-popup'
+      });
+
+      // Center map on new report and open popup
+      mapInstance.current.setView([newReport.coordinates[0], newReport.coordinates[1]], 12);
+      marker.openPopup();
+
+      // Add to markers array
+      markersRef.current.push(marker);
+
+      // Remove pulsing animation after 5 seconds
+      setTimeout(() => {
+        marker.setStyle({
+          radius: radius,
+          className: ''
+        });
+      }, 5000);
+    }
+  }, [newReport]);
 
   const getSeverityColor = (severity: string) => {
     const colors: { [key: string]: string } = {

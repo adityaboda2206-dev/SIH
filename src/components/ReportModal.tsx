@@ -1,11 +1,14 @@
 import React, { useState, useRef } from 'react';
+import { Report } from '../types';
 
 interface ReportModalProps {
   onClose: () => void;
   showNotification: (title: string, message: string, type: string) => void;
+  onReportSubmit: (report: Omit<Report, 'id' | 'timestamp'>) => void;
+  user: { name: string; email: string } | null;
 }
 
-const ReportModal: React.FC<ReportModalProps> = ({ onClose, showNotification }) => {
+const ReportModal: React.FC<ReportModalProps> = ({ onClose, showNotification, onReportSubmit, user }) => {
   const [formData, setFormData] = useState({
     hazardType: '',
     severity: '',
@@ -14,6 +17,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ onClose, showNotification }) 
     contact: ''
   });
   const [files, setFiles] = useState<File[]>([]);
+  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -54,6 +58,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ onClose, showNotification }) 
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
+          setCoordinates([latitude, longitude]);
           setFormData(prev => ({
             ...prev,
             location: `Current Location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`
@@ -79,10 +84,36 @@ const ReportModal: React.FC<ReportModalProps> = ({ onClose, showNotification }) 
 
     setIsSubmitting(true);
 
+    // Create the report object
+    const newReport: Omit<Report, 'id' | 'timestamp'> = {
+      type: formData.hazardType,
+      severity: formData.severity,
+      location: formData.location,
+      description: formData.description,
+      verified: false,
+      reporter: user?.name || 'Anonymous User',
+      contact: formData.contact || user?.email || '',
+      coordinates: coordinates || [13.0827 + (Math.random() - 0.5) * 0.1, 80.2707 + (Math.random() - 0.5) * 0.1], // Default to Chennai area with slight randomization
+      images: files.length
+    };
+
     // Simulate API call
     setTimeout(() => {
-      showNotification('Report Submitted!', 'Your hazard report has been submitted successfully.', 'success');
+      onReportSubmit(newReport);
+      showNotification('Report Submitted!', 'Your hazard report has been submitted and added to the map.', 'success');
       setIsSubmitting(false);
+      
+      // Reset form
+      setFormData({
+        hazardType: '',
+        severity: '',
+        location: '',
+        description: '',
+        contact: ''
+      });
+      setFiles([]);
+      setCoordinates(null);
+      
       onClose();
     }, 2000);
   };

@@ -12,17 +12,19 @@ interface DashboardGridProps {
   socialPosts: SocialPost[];
   onShowReportModal: () => void;
   showNotification: (title: string, message: string, type: string) => void;
+  newReport?: Report | null;
 }
 
 const DashboardGrid: React.FC<DashboardGridProps> = ({ 
   reports, 
   socialPosts, 
   onShowReportModal,
-  showNotification 
+  showNotification,
+  newReport
 }) => {
   return (
     <div className="dashboard-grid">
-      <MapCard reports={reports} showNotification={showNotification} />
+      <MapCard reports={reports} showNotification={showNotification} newReport={newReport} />
       <ReportsCard reports={reports} showNotification={showNotification} />
       <SocialCard socialPosts={socialPosts} showNotification={showNotification} />
       <AnalyticsCard />

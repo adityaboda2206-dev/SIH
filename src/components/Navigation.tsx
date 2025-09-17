@@ -1,11 +1,15 @@
 import React from 'react';
+import { User } from '../types';
 
 interface NavigationProps {
   onShowReportModal: () => void;
   onShowDashboard: () => void;
   onToggleDarkMode: () => void;
   onToggleProfileMenu: () => void;
+  onShowAuthModal: () => void;
   isDarkMode: boolean;
+  user: User | null;
+  isAuthenticated: boolean;
 }
 
 const Navigation: React.FC<NavigationProps> = ({
@@ -13,7 +17,10 @@ const Navigation: React.FC<NavigationProps> = ({
   onShowDashboard,
   onToggleDarkMode,
   onToggleProfileMenu,
+  onShowAuthModal,
   isDarkMode
+  user,
+  isAuthenticated
 }) => {
   return (
     <nav className="navbar">
@@ -39,13 +46,20 @@ const Navigation: React.FC<NavigationProps> = ({
           <button className="nav-btn tertiary" onClick={onToggleDarkMode}>
             <i className={`fas ${isDarkMode ? 'fa-sun' : 'fa-moon'}`}></i>
           </button>
-          <div className="nav-profile" onClick={onToggleProfileMenu}>
-            <img 
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" 
-              alt="Profile" 
-              className="profile-img"
-            />
-          </div>
+          {isAuthenticated && user ? (
+            <div className="nav-profile" onClick={onToggleProfileMenu}>
+              <img 
+                src={user.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face"} 
+                alt="Profile" 
+                className="profile-img"
+              />
+            </div>
+          ) : (
+            <button className="nav-btn secondary" onClick={onShowAuthModal}>
+              <i className="fas fa-sign-in-alt"></i>
+              <span>Sign In</span>
+            </button>
+          )}
         </div>
       </div>
     </nav>

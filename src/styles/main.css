@@ -1554,6 +1554,58 @@ form {
     color: var(--text-primary);
 }
 
+/* New report highlight */
+.new-report-highlight {
+    border: 2px solid #10b981 !important;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4) !important;
+    animation: newReportGlow 3s ease-in-out infinite;
+}
+
+@keyframes newReportGlow {
+    0%, 100% { 
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+    50% { 
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+    }
+}
+
+/* Auth Modal Specific Styles */
+.auth-toggle-link {
+    background: none;
+    border: none;
+    color: rgba(102, 126, 234, 0.8);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: color var(--animation-speed) ease;
+}
+
+.auth-toggle-link:hover {
+    color: rgba(102, 126, 234, 1);
+}
+
+/* Enhanced form validation */
+.form-control:invalid {
+    border-color: var(--danger);
+}
+
+.form-control:valid {
+    border-color: var(--success);
+}
+
+/* Loading states */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn:disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
 /* Animation Classes */
 .fade-in {
     animation: fadeIn 0.5s ease-in;

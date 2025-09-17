@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Report, SocialPost, Stats } from '../types';
 
-export const useAppData = () => {
+export const useAppData = (showNotification?: (title: string, message: string, type: string) => void) => {
   const [reports] = useState<Report[]>([
     {
       id: 1,
@@ -132,6 +132,32 @@ export const useAppData = () => {
     coverage: 94
   });
 
+  const addReport = useCallback((newReport: Omit<Report, 'id' | 'timestamp'>) => {
+    const report: Report = {
+      ...newReport,
+      id: Date.now(),
+      timestamp: new Date(),
+    };
+    
+    // In a real app, this would be an API call
+    // For now, we'll just show a notification and update stats
+    setStats(prev => ({
+      ...prev,
+      totalReports: prev.totalReports + 1,
+      activeHazards: prev.activeHazards + (report.severity === 'high' || report.severity === 'critical' ? 1 : 0)
+    }));
+    
+    if (showNotification) {
+      showNotification(
+        'Report Added!', 
+        `New ${report.type.replace('-', ' ')} report has been added to the map.`, 
+        'success'
+      );
+    }
+    
+    return report;
+  }, [showNotification]);
+
   const updateStats = useCallback(() => {
     setStats(prev => ({
       totalReports: prev.totalReports + Math.floor(Math.random() * 5),
@@ -143,5 +169,5 @@ export const useAppData = () => {
     }));
   }, []);
 
-  return { reports, socialPosts, stats, updateStats };
+  return { reports, socialPosts, stats, updateStats, addReport };
 };
