@@ -18,7 +18,7 @@ const Navigation: React.FC<NavigationProps> = ({
   onToggleDarkMode,
   onToggleProfileMenu,
   onShowAuthModal,
-  isDarkMode
+  isDarkMode,
   user,
   isAuthenticated
 }) => {
@@ -49,7 +49,10 @@ const Navigation: React.FC<NavigationProps> = ({
           {isAuthenticated && user ? (
             <div className="nav-profile" onClick={onToggleProfileMenu}>
               <img 
-                src={user.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face"} 
+                src={
+                  user.avatar || 
+                  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face"
+                } 
                 alt="Profile" 
                 className="profile-img"
               />
